@@ -22,7 +22,7 @@ const Hero = () => {
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex animi, eos, beatae quaerat voluptatum eaque officiis deserunt tempore odit necessitatibus veniam accusantium ullam, dicta quam voluptates? Unde ipsum quis dignissimos.</p>
                 </div>
                 <div className='flex flex-wrap items-center gap-5'>
-                    <Link to="/join-today">
+                    <Link to="/register">
                             <button
                             className={`px-7 py-3 rounded-lg ${isLoggedIn ? 'bg-gray-400 cursor-not-allowed' : 'bg-secondary'} font-bold uppercase`}
                             disabled={isLoggedIn}

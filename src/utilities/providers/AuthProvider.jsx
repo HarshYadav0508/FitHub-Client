@@ -65,12 +65,48 @@ const AuthProvider = ({children}) => {
     const googleLogin = async () => {
         try {
             setLoader(true);
-            return await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+    
+            
+            const userInfo = {
+                name: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+                role: 'user',  
+                gender: 'Is not Specified',  
+                address: 'Is not Specified',
+                phone: 'Is not Specified',
+            };
+    
+            await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`)
+                .then((res) => {
+                    if (res.data.length === 0) {
+                        
+                        return axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo)
+                            .then(() => {
+                                console.log('User saved to DB');
+                            })
+                            .catch((err) => {
+                                console.error('Error saving user to DB:', err);
+                            });
+                    } else {
+                        console.log('User already exists');
+                    }
+                })
+                .catch((err) => {
+                    console.error('Error checking user existence:', err);
+                });
+            
+            return result;  
         } catch (error) {
             setError(error.code);
+            console.error("Google Login Error:", error);
             throw error;
+        } finally {
+            setLoader(false);
         }
-    }
+    };
 
     // OBSERVER FOR USER
     useEffect(() => {
