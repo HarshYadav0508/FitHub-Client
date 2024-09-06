@@ -70,8 +70,7 @@ const ClassPage = () => {
     <ToastContainer />
     <div
     className='font-gilroy flex flex-col items-center font-medium text-gray dark:bg-dark dark:text-white text-lg leading-[27px] w-full mx-auto'
-    data-new-gr-c-s-check-Loaded='14.1157.0'
-    data-gr-ext-installed=''
+    
     >
         <div className='mt-20 mb-28 pt-3 text-center'>
             <h1 className='text-4xl font-bold '><span className='text-secondary'>Course</span> Details</h1>
