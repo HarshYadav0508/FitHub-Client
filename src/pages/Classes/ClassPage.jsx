@@ -29,43 +29,39 @@ const ClassPage = () => {
     const axiosFetch = useAxiosFetch();
     const axiosSecure = useAxiosSecure();
 
-    const handleSelect = (id) => {
-    
-
-        axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
-          .then((res) => setEnrolledClasses(res.data))
-          .catch((err) => console.log(err));
-        
+    const handleSelect = async (id) => {
         if (!currentUser) {
           toast.warn('Please login first', { position: "top-center" });
           return navigate('/login');
         }
       
-        axiosSecure.get(`/cart-item/${id}?email=${currentUser?.email}`)
-          .then(res => {
-            if (res.data.classId === id) {
-              return toast.info("Already Selected");
-            } else if (enrolledClasses.find(item => item.classes._id === id)) {
-              return toast.info("Already Enrolled");
-            } else {
-              const data = {
-                classId: id,
-                userMail: currentUser?.email,
-                date: new Date()  // Corrected the property name 'data' to 'date'         
-              };
+        try {
+          // Fetch enrolled classes
+          const enrolledClassesRes = await axiosSecure.get(`/enrolled-classes/${currentUser?.email}`);
+          setEnrolledClasses(enrolledClassesRes.data);
       
-              axiosSecure.post('/add-to-cart', data)
-                .then(res => {
-                  toast.success('Successfully added to the cart!');
-                  console.log(res.data);
-                });
-            }
-          })
-          .catch((err) => {
-            toast.error('Something went wrong!');
-            console.log(err);
-          });
-      }
+          // Check if the class is already in the cart
+          const cartItemRes = await axiosSecure.get(`/cart-item/${id}?email=${currentUser?.email}`);
+          if (cartItemRes.data.classId === id) {
+            return toast.info("Already Selected");
+          } else if (enrolledClassesRes.data.find(item => item.classes._id === id)) {
+            return toast.info("Already Enrolled");
+          }
+      
+          // Add to cart
+          const data = {
+            classId: id,
+            userMail: currentUser?.email,
+            date: new Date() 
+          };
+      
+          await axiosSecure.post('/add-to-cart', data);
+          toast.success('Successfully added to the cart!');
+        } catch (err) {
+          toast.error('Something went wrong!');
+          console.error(err);
+        }
+      };
 
 
   return (
