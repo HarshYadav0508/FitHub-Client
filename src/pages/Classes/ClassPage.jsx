@@ -13,7 +13,6 @@ import { BiTime } from 'react-icons/bi';
 import { FaLanguage, FaLevelUpAlt, FaUser, FaUsers } from 'react-icons/fa';
 import { SiKnowledgebase } from "react-icons/si";
 import { MdBookOnline } from 'react-icons/md';
-import bannerImg from '../../assets/home/banner-4.jpg';
 
 
 

@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 const UpdateUser = () => {
     const {user} = useAuth();
     const userCredentials = useLoaderData();
-    console.log(userCredentials);
+    // console.log(userCredentials);
     const axiosFetch = useAxiosFetch();
     const axiosSecure = useAxiosSecure();
 
@@ -21,7 +21,7 @@ const UpdateUser = () => {
             if(res.data.modifiedCount > 0) {
                 toast.info('User updated Successfully!');
             }
-            console.log(res.data);
+            // console.log(res.data);
         }).catch(err => console.log(err))
     }
 
