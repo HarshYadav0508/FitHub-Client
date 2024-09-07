@@ -9,46 +9,14 @@ const GoogleLogin = () => {
     const { googleLogin } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
-        try {
-            const userCredential = await googleLogin();
-            const user = userCredential.user;
-
-            if (user) {
-                const userInfo = {
-                    name: user?.displayName || 'Unnamed',
-                    email: user?.email,
-                    photoURL: user?.photoURL,
-                    role: 'user',
-                    gender: 'Is not Specified',
-                    address: 'Is not Specified',
-                    phone: 'Is not Specified'
-                };
-
-                if (user.email && user.displayName) {
-                    try {
-                        const res = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
-                        if (res.data.length === 0) {
-                            // User does not exist, so save new user data
-                            await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
-                            toast.success('Registration Successful!');
-                        } else {
-                            // User already exists, navigate without saving
-                            toast.info('User already exists');
-                        }
-                        navigate('/');
-                    } catch (err) {
-                        console.error('Error checking user existence:', err);
-                        toast.error('Error checking user existence');
-                    }
-                }
-            }
-        } catch (error) {
-            console.error("Google Login Error:", error);
-            toast.error('Google Login Error');
-        }
-    };
-
+    const handleLogin = () => {
+        googleLogin().then((userCredential) => {
+            toast.success("Login successful");
+            navigate('/');
+        }).catch((error) => {
+            toast.error(`Login failed: ${error.message}`);
+        });
+    }
     return (
         <div className="flex items-center justify-center my-3">
             <ToastContainer position={toast.POSITION.TOP_CENTER}/>

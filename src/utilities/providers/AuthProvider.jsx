@@ -67,28 +67,31 @@ const AuthProvider = ({children}) => {
             setLoader(true);
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
-    
-            const userInfo = {
-                name: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL,
-                role: 'user',
-                gender: 'Is not Specified',
-                address: 'Is not Specified',
-                phone: 'Is not Specified',
-            };
-    
-            // Check if the user exists in the database
-            const { data } = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
-            if (data.length === 0) {
-                // User does not exist, save them
-                await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
-                console.log('User saved to DB');
-            } else {
-                console.log('User already exists');
+
+            if (user) {
+                const userInfo = {
+                    name: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    role: 'user',
+                    gender: 'Is not Specified',
+                    address: 'Is not Specified',
+                    phone: 'Is not Specified'
+                };
+
+                
+                const response = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
+                const userExists = response.data.length > 0;
+
+                if (!userExists) {
+                    await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
+                    console.log('User saved to DB');
+                } else {
+                    console.log('User already exists');
+                }
+                
+                return result;
             }
-    
-            return result;
         } catch (error) {
             setError(error.code);
             console.error("Google Login Error:", error);
