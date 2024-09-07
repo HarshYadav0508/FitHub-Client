@@ -11,11 +11,30 @@ const GoogleLogin = () => {
 
     const handleLogin = () => {
         googleLogin().then((userCredential) => {
-            toast.success("Login successful");
-            navigate('/');
-        }).catch((error) => {
-            toast.error(`Login failed: ${error.message}`);
-        });
+            const user = userCredential.user;
+
+            if(user){
+                const userInfo = {
+                name: user?.displayName,
+                email: user?.email,
+                photoURL: user?.photoURL,
+                role: 'user',
+                gender: 'Not specified',
+                address: 'Not Specified',
+                phone: 'Not specified',
+            };
+
+            if(user.email && user.displayName) {
+                return  axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo).then(() => {
+                    toast.success("Login successful");
+                    navigate('/');
+                }).catch((error) => {
+                    toast.error(`Login failed: ${error.message}`);
+                });
+            }
+        }
+            
+        })
     }
     return (
         <div className="flex items-center justify-center my-3">
