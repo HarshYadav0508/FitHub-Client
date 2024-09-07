@@ -1,15 +1,17 @@
-import React from 'react'
+import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 import 'swiper/css/effect-creative';
-import {EffectCreative} from 'swiper';
+import 'swiper/css/navigation';
+import 'swiper/css/autoplay';
+import { EffectCreative, Navigation, Autoplay } from 'swiper';
 import Hero from './Hero';
 import Hero2 from './Hero2';
-import 'swiper/css';
 
 const HeroContainer = () => {
   return (
     <section>
-        <Swiper
+      <Swiper
         grabCursor={true}
         loop={true}
         spaceBetween={50}
@@ -18,25 +20,30 @@ const HeroContainer = () => {
         creativeEffect={{
           prev: {
             shadow: true,
-            translate: ['-110%', 0, -300],  
+            translate: ['-110%', 0, -300],
           },
           next: {
             shadow: true,
-            translate: ['110%', 0, -300],   
+            translate: ['110%', 0, -300],
           },
         }}
-        modules={[EffectCreative]}
+        modules={[EffectCreative, Navigation, Autoplay]}
+        navigation={{ clickable: true }} // Enable navigation arrows
+        autoplay={{
+          delay: 5000, // Change slide every 5 seconds
+          disableOnInteraction: false, // Allow autoplay to continue after user interaction
+        }}
         className="mySwiper"
-        >
-            <SwiperSlide>
-                <Hero />
-            </SwiperSlide>
-            <SwiperSlide>
-                <Hero2 />
-            </SwiperSlide>
-        </Swiper>
+      >
+        <SwiperSlide>
+          <Hero />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Hero2 />
+        </SwiperSlide>
+      </Swiper>
     </section>
-  )
-}
+  );
+};
 
 export default HeroContainer;

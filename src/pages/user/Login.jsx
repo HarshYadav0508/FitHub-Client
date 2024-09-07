@@ -64,7 +64,7 @@ const Login = () => {
                 <Link className='underline' to='/register'> Sign Up</Link>
             </p>
         </form>
-        <p className='text-red-500 py-5 font-medium text-center'>Please signup manually, if you are first time user. Google Login might give problem due to hosting. </p>
+        {/* <p className='text-red-500 py-5 font-medium text-center'>Please signup manually, if you are first time user. Google Login might give problem due to hosting. </p> */}
         <GoogleLogin />
     </div>
 </div>
