@@ -252,7 +252,7 @@ function NavBar() {
                         <img src={user.photoURL} alt='pic' className='h-[40px] rounded-full w-[40px]' />
                       </li>
                       <li>
-                        <button onClick={handleLogout} className='font-bold px-3 py-2 bg-secondary text-white rounded-xl'>
+                        <button onClick={handleLogoutAndCloseMenu} className='font-bold px-3 py-2 bg-secondary text-white rounded-xl'>
                           Logout
                         </button>
                       </li>
