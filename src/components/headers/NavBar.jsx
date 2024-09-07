@@ -75,9 +75,33 @@ function NavBar() {
     setNavBg(`${bgClass} ${darkBgClass}`);
   }, [scrollPosition, isHome, location.pathname, isDarkMode]);
 
-  const handleLogoutAndCloseMenu = (e) => {
+  const handleLogoutMobile = (e) => {
     e.preventDefault();
     toggleMobileMenu(); // Close the mobile menu first
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Logout"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout().then(
+          Swal.fire({
+            title: "Logged Out",
+            text: "You have been Logged out",
+            icon: "success"
+          })
+        ).catch((err) => console.log(err))
+      }
+      navigate('/')
+    });
+  };
+
+  const handleLogout = (e) => {
+    e.preventDefault();
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -182,7 +206,7 @@ function NavBar() {
                         <img src={user.photoURL} alt='pic' className='h-[40px] rounded-full w-[40px]' />
                       </li>
                       <li>
-                        <button onClick={handleLogoutAndCloseMenu} className='font-bold text-xl py-2 px-4 block bg-secondary text-white rounded-xl' >
+                        <button onClick={handleLogoutMobile} className='font-bold text-xl py-2 px-4 block bg-secondary text-white rounded-xl' >
                           Logout
                         </button>
                       </li>
@@ -252,7 +276,7 @@ function NavBar() {
                         <img src={user.photoURL} alt='pic' className='h-[40px] rounded-full w-[40px]' />
                       </li>
                       <li>
-                        <button onClick={handleLogoutAndCloseMenu} className='font-bold px-3 py-2 bg-secondary text-white rounded-xl'>
+                        <button onClick={handleLogout} className='font-bold px-3 py-2 bg-secondary text-white rounded-xl'>
                           Logout
                         </button>
                       </li>
