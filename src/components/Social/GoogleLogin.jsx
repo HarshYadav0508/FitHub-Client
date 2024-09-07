@@ -6,36 +6,42 @@ import { ToastContainer, toast } from 'react-toastify';
 
 
 const GoogleLogin = () => {
-    const { googleLogin } = useAuth();
+    const { googleLogin, loader } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogin = () => {
-        googleLogin().then((userCredential) => {
+    const handleLogin = async () => {
+        try {
+            const userCredential = await googleLogin();
             const user = userCredential.user;
 
-            if(user){
+            if (user) {
                 const userInfo = {
-                name: user?.displayName,
-                email: user?.email,
-                photoURL: user?.photoURL,
-                role: 'user',
-                gender: 'Not specified',
-                address: 'Not Specified',
-                phone: 'Not specified',
-            };
+                    name: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    role: 'user',
+                    gender: 'Is not Specified',
+                    address: 'Is not Specified',
+                    phone: 'Is not Specified'
+                };
 
-            if(user.email && user.displayName) {
-                return  axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo).then(() => {
-                    toast.success("Login successful");
+                if (user.email && user.displayName) {
+                    const res = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
+                    
+                    if (res.data.length === 0) {
+                        await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
+                        toast.success('Registration Successful!');
+                    } else {
+                        toast.info('User already exists');
+                    }
+
                     navigate('/');
-                }).catch((error) => {
-                    toast.error(`Login failed: ${error.message}`);
-                });
+                }
             }
+        } catch (error) {
+            toast.error('Login failed. Please try again.');
         }
-            
-        })
-    }
+    };
     return (
         <div className="flex items-center justify-center my-3">
             <ToastContainer position={toast.POSITION.TOP_CENTER}/>
