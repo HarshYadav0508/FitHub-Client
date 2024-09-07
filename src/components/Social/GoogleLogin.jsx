@@ -27,17 +27,28 @@ const GoogleLogin = () => {
 
                 if (user.email && user.displayName) {
                     console.log(user.email);
-                    const res = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
-                    console.log(res.data);
-                    
-                    if (res.data.length === 0) {
-                        await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
-                        toast.success('Registration Successful!');
-                    } else {
-                        toast.info('User already exists');
-                    }
-
-                    navigate('/');
+                    const res = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`).then((res) => {
+                        const existingUser = res.data.find(u => u.email === user.email);
+                
+                        if (!existingUser) {
+                            // User does not exist, so save new user data
+                            return axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo)
+                                .then(() => {
+                                    navigate('/');
+                                    return "Registration Successful!";
+                                })
+                                .catch((err) => {
+                                    throw new Error(err);
+                                });
+                        } else {
+                            // User already exists, navigate without saving
+                            console.log("User already exists");
+                            navigate('/');
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("Error checking user existence:", err);
+                    });
                 }
             }
         } catch (error) {
