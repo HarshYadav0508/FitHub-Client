@@ -1,6 +1,6 @@
 import { useSpring } from 'framer-motion';
 import React, { createContext, useEffect, useState } from 'react';
-import { app } from '../../config/firebase.init';
+import { app, googleProvider } from '../../config/firebase.init';
 import { getAuth, createUserWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
@@ -64,42 +64,52 @@ const AuthProvider = ({children}) => {
     const provider = new GoogleAuthProvider();
     const googleLogin = async () => {
         try {
-            setLoader(true);
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-
-            if (user) {
-                const userInfo = {
-                    name: user.displayName,
-                    email: user.email,
-                    photoURL: user.photoURL,
-                    role: 'user',
-                    gender: 'Is not Specified',
-                    address: 'Is not Specified',
-                    phone: 'Is not Specified'
-                };
-
-                
-                const response = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
-                const userExists = response.data.length > 0;
-
-                if (!userExists) {
-                    await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
-                    console.log('User saved to DB');
-                } else {
-                    console.log('User already exists');
-                }
-                
-                return result;
-            }
+            setLoader(true)
+            return await signInWithPopup(auth, googleProvider)
         } catch (error) {
             setError(error.code);
-            console.error("Google Login Error:", error);
             throw error;
-        } finally {
-            setLoader(false);
         }
-    };
+    }
+
+    // const googleLogin = async () => {
+    //     try {
+    //         setLoader(true);
+    //         const result = await signInWithPopup(auth, provider);
+    //         const user = result.user;
+
+    //         if (user) {
+    //             const userInfo = {
+    //                 name: user.displayName,
+    //                 email: user.email,
+    //                 photoURL: user.photoURL,
+    //                 role: 'user',
+    //                 gender: 'Is not Specified',
+    //                 address: 'Is not Specified',
+    //                 phone: 'Is not Specified'
+    //             };
+
+                
+    //             const response = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
+    //             const userExists = response.data.length > 0;
+
+    //             if (!userExists) {
+    //                 await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
+    //                 console.log('User saved to DB');
+    //             } else {
+    //                 console.log('User already exists');
+    //             }
+                
+    //             return result;
+    //         }
+    //     } catch (error) {
+    //         setError(error.code);
+    //         console.error("Google Login Error:", error);
+    //         throw error;
+    //     } finally {
+    //         setLoader(false);
+    //     }
+    // };
 
     // OBSERVER FOR USER
     useEffect(() => {
