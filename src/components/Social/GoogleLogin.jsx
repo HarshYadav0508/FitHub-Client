@@ -26,8 +26,9 @@ const GoogleLogin = () => {
                 };
 
                 if (user.email && user.displayName) {
+                    console.log(user.email);
                     const res = await axios.get(`https://fithub-r8lw.onrender.com/users?email=${user.email}`);
-                    console.log(res);
+                    console.log(res.data);
                     
                     if (res.data.length === 0) {
                         await axios.post('https://fithub-r8lw.onrender.com/new-user', userInfo);
